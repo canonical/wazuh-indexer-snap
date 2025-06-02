@@ -18,8 +18,13 @@ analytics suite that makes it easy to ingest, search, visualize, and analyze dat
 
 or:
 ```
+<<<<<<< HEAD
 sudo snap install wazuh-indexer --channel=latest/edge
 sudo snap connect wazuh-indexer:process-control
+=======
+sudo snap install opensearch --channel=2/edge
+sudo snap connect opensearch:process-control
+>>>>>>> refs/remotes/upstream/2/edge
 ```
 
 ### Environment configuration:

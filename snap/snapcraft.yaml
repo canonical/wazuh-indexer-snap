@@ -13,8 +13,8 @@ grade: stable
 
 confinement: strict
 
-architectures:
-  - build-on: amd64
+platforms:
+  amd64:
 
 system-usernames:
   snap_daemon: shared
@@ -120,15 +120,6 @@ apps:
   setup:
     command: opt/opensearch/setup.sh
 
-  plugin-add:
-    command: opt/opensearch/plugins/add.sh
-
-  plugins-list:
-    command: opt/opensearch/plugins/list.sh
-
-  plugins-remove:
-    command: opt/opensearch/plugins/remove.sh
-
   test-cluster-health-green:
     command: opt/opensearch/tests/test-cluster-health-green.sh
     plugs:
@@ -146,6 +137,99 @@ apps:
     plugs:
       - network
       - network-bind
+
+  opensearch-bin:
+    command: opt/opensearch/bin-wrapper.sh
+    plugs:
+      - network
+      - network-bind
+    environment:
+      bin_script: opensearch
+
+  plugin:
+    command: opt/opensearch/bin-wrapper.sh
+    plugs:
+      - network
+      - network-bind
+    environment:
+      bin_script: opensearch-plugin.orig
+
+  cli:
+    command: opt/opensearch/bin-wrapper.sh
+    plugs:
+      - network
+      - network-bind
+    environment:
+      bin_script: opensearch-cli
+
+  env:
+    command: opt/opensearch/bin-wrapper.sh
+    plugs:
+      - network
+      - network-bind
+    environment:
+      bin_script: opensearch-env
+
+  env-from-file:
+    command: opt/opensearch/bin-wrapper.sh
+    plugs:
+      - network
+      - network-bind
+    environment:
+      bin_script: opensearch-env-from-file
+
+  keystore:
+    command: opt/opensearch/bin-wrapper.sh
+    plugs:
+      - network
+      - network-bind
+    environment:
+      bin_script: opensearch-keystore.orig
+
+  node:
+    command: opt/opensearch/bin-wrapper.sh
+    plugs:
+      - network
+      - network-bind
+    environment:
+      bin_script: opensearch-node
+
+  shard:
+    command: opt/opensearch/bin-wrapper.sh
+    plugs:
+      - network
+      - network-bind
+    environment:
+      bin_script: opensearch-shard
+
+  upgrade:
+    command: opt/opensearch/bin-wrapper.sh
+    plugs:
+      - network
+      - network-bind
+    environment:
+      bin_script: opensearch-upgrade
+
+  performance-analyzer-agent:
+    command: opt/opensearch/bin-wrapper.sh
+    plugs:
+      - network
+      - network-bind
+    environment:
+      bin_script: opensearch-performance-analyzer/performance-analyzer-agent
+
+  performance-analyzer-agent-cli:
+    command: opt/opensearch/bin-wrapper.sh
+    plugs:
+      - network
+      - network-bind
+    environment:
+      bin_script: opensearch-performance-analyzer/performance-analyzer-agent-cli
+
+  keytool:
+    command: usr/lib/jvm/java-21-openjdk-amd64/bin/keytool
+    plugs:
+      - mount-observe
 
 parts:
   dependencies:
@@ -170,6 +254,7 @@ parts:
       - libexpat1
       - zlib1g
 
+
   wrapper-scripts:
     plugin: nil
     source: ./scripts
@@ -182,24 +267,18 @@ parts:
 
   wazuh-indexer:
     plugin: nil
+    after: [wrapper-scripts]
     build-packages:
       - ca-certificates
       - ca-certificates-java
       - openjdk-21-jdk
       - openssl
       - ssl-cert
-    override-build: |
-      # update deps
-      apt-get update; apt-get upgrade -y; apt-get autoremove --purge -y; apt-get clean -y
-      update-ca-certificates -f
-
-      # setup trust store
-      trust_store="${CRAFT_PART_INSTALL}/etc/ssl/certs/java/"
-      mkdir -p "${trust_store}"
-      cp /etc/ssl/certs/java/cacerts "${trust_store}"
+    stage-packages:
+      - openjdk-21-jdk-headless
+      - wazuh-indexer=4.9.2-1
     stage-packages:
       - openjdk-21-jdk
-      - wazuh-indexer=4.9.2-1
     override-stage: |
       craftctl default
       chmod -R 755 usr/share/wazuh-indexer

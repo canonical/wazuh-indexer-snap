@@ -132,22 +132,22 @@ jobs:
           OPENSEARCH_PATH_CERTS: /var/snap/wazuh-indexer/current/etc/wazuh-indexer/certificates
         run: |
           # Prometheus Exporter appears in plugins listing
-          prometheus_is_there=$(sudo opensearch.plugin list | grep prometheus-exporter)
+          prometheus_is_there=$(sudo -E "${OPENSEARCH_BIN}"/opensearch-plugin list | grep prometheus-exporter)
           if [ ! "$prometheus_is_there" ]; then
             exit 2
           fi
           # repository-s3 appears in plugins listing
-          repository_s3_is_there=$(sudo opensearch.plugin list | grep repository-s3)
+          repository_s3_is_there=$(sudo -E "${OPENSEARCH_BIN}"/opensearch-plugin list | grep repository-s3)
           if [ ! "$repository_s3_is_there" ]; then
             exit 3
           fi
           # repository-gcs appears in plugins listing
-          repository_gcs_is_there=$(sudo opensearch.plugin list | grep repository-gcs)
+          repository_gcs_is_there=$(sudo -E "${OPENSEARCH_BIN}"/opensearch-plugin list | grep repository-gcs)
           if [ ! "$repository_gcs_is_there" ]; then
             exit 4
           fi
           # repository-azure appears in plugins listing
-          repository_azure_is_there=$(sudo opensearch.plugin list | grep repository-azure)
+          repository_azure_is_there=$(sudo -E "${OPENSEARCH_BIN}"/opensearch-plugin list | grep repository-azure)
           if [ ! "$repository_azure_is_there" ]; then
             exit 1
           fi

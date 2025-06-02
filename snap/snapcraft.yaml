@@ -274,6 +274,14 @@ parts:
       - openjdk-21-jdk
       - openssl
       - ssl-cert
+    override-build: |
+      # update deps
+      apt-get update; apt-get upgrade -y; apt-get autoremove --purge -y; apt-get clean -y
+      update-ca-certificates -f
+      # setup trust store
+      trust_store="${CRAFT_PART_INSTALL}/etc/ssl/certs/java/"
+      mkdir -p "${trust_store}"
+      cp /etc/ssl/certs/java/cacerts "${trust_store}"
     stage-packages:
       - openjdk-21-jdk-headless
       - wazuh-indexer=4.9.2-1

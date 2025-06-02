@@ -285,8 +285,6 @@ parts:
     stage-packages:
       - openjdk-21-jdk-headless
       - wazuh-indexer=4.9.2-1
-    stage-packages:
-      - openjdk-21-jdk
     override-stage: |
       craftctl default
       chmod -R 755 usr/share/wazuh-indexer

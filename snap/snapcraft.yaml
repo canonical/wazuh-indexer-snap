@@ -278,6 +278,7 @@ parts:
       # update deps
       apt-get update; apt-get upgrade -y; apt-get autoremove --purge -y; apt-get clean -y
       update-ca-certificates -f
+
       # setup trust store
       trust_store="${CRAFT_PART_INSTALL}/etc/ssl/certs/java/"
       mkdir -p "${trust_store}"

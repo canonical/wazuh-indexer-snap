@@ -183,8 +183,8 @@ jobs:
         run: |
           echo "TEST" | sudo tee -a ${OPENSEARCH_PATH_CONF}/testkey
 
-          sudo opensearch.keystore add-file s3.client.default.access_key ${OPENSEARCH_PATH_CONF}/testkey
-          sudo opensearch.keystore add-file s3.client.default.secret_key ${OPENSEARCH_PATH_CONF}/testkey
+          sudo -E "${OPENSEARCH_BIN}"/opensearch-keystore add-file s3.client.default.access_key ${OPENSEARCH_PATH_CONF}/testkey
+          sudo -E "${OPENSEARCH_BIN}"/opensearch-keystore add-file s3.client.default.secret_key ${OPENSEARCH_PATH_CONF}/testkey
 
           sudo snap restart wazuh-indexer.daemon
           sleep 20s

@@ -285,7 +285,7 @@ parts:
       cp /etc/ssl/certs/java/cacerts "${trust_store}"
     stage-packages:
       - openjdk-21-jdk-headless
-      - wazuh-indexer=4.12.0
+      - wazuh-indexer=4.12.0-1
     override-stage: |
       craftctl default
       chmod -R 755 usr/share/wazuh-indexer

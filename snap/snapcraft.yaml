@@ -305,7 +305,7 @@ parts:
       # It is important to correnct the user permissions for the opensearch.keystore file, after the script is executed.
       # Given we know which user is going to be used for the daemon, we can set this correction in the keystore script.
       # TODO: we should perhaps NOT alter the source script - but until we find a better alternative UX wise we keep it
-      echo 'chown snap_daemon:root /var/snap/wazuh-indexer/current/etc/wazuh-indexer/opensearch.keystore' >> "${CRAFT_STAGE}/usr/share/wazuh-indexer/bin/opensearch-keystore"
+      #echo 'chown snap_daemon:root /var/snap/wazuh-indexer/current/etc/wazuh-indexer/opensearch.keystore' >> "${CRAFT_STAGE}/usr/share/wazuh-indexer/bin/opensearch-keystore"
       sed -i -e 's/^\([^#].*\)/# \1/g' ${CRAFT_STAGE}/etc/wazuh-indexer/opensearch.yml
       echo '' >> "${CRAFT_STAGE}/etc/wazuh-indexer/opensearch.yml"
       echo 'compatibility.override_main_response_version: true' >> "${CRAFT_STAGE}/etc/wazuh-indexer/opensearch.yml"

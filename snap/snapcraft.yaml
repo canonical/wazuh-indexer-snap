@@ -337,12 +337,5 @@ parts:
           rm -rf "${CRAFT_PART_INSTALL}/${res}"
       done
 
-    override-prime: |
-      # Copy wrappers for bin commands to fix upgrades: https://github.com/canonical/opensearch-operator/issues/537
-      craftctl default
-
-      mv "${CRAFT_PRIME}/usr/share/opensearch/bin/opensearch-plugin" "${CRAFT_PRIME}/usr/share/opensearch/bin/opensearch-plugin.orig"
-      mv "${CRAFT_PRIME}/usr/share/opensearch/bin/opensearch-keystore" "${CRAFT_PRIME}/usr/share/opensearch/bin/opensearch-keystore.orig"
-
       cp "${CRAFT_STAGE}/opt/opensearch/plugin-wrapper.sh" "${CRAFT_PRIME}/usr/share/opensearch/bin/opensearch-plugin"
       cp "${CRAFT_STAGE}/opt/opensearch/keystore-wrapper.sh" "${CRAFT_PRIME}/usr/share/opensearch/bin/opensearch-keystore"

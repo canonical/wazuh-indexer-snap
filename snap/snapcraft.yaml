@@ -11,7 +11,7 @@ description: |
 
 grade: stable
 
-confinement: strict
+confinement: strict # use 'strict' once you have the right plugs and slots
 
 platforms:
   amd64:
@@ -106,6 +106,7 @@ apps:
       - shmem-perf-analyzer
       - system-observe
       - sys-fs-cgroup-service
+      - intel-qat
     environment:
       LD_LIBRARY_PATH: "${LD_LIBRARY_PATH}:${KNN_LIB_DIR}"
 
@@ -254,6 +255,9 @@ parts:
       - libcrypt1
       - libexpat1
       - zlib1g
+      - libqatzip3
+      - acl
+
 
 
   wrapper-scripts:

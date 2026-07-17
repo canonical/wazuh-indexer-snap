@@ -91,6 +91,10 @@ jobs:
 
           # wait a bit for it to fully initialize
           sleep 40s
+          
+          # check the logs for potential issues
+          sudo snap logs wazuh-indexer -n 100
+
           # create the security index
           sudo snap run wazuh-indexer.security-init --tls-priv-key-admin-pass=admin1234
           sleep 15s

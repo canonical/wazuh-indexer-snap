@@ -46,7 +46,7 @@ jobs:
         id: publish
         uses: snapcore/action-publish@v1
         env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPSTORE_TOKEN }}
         with:
           snap: wazuh-indexer_${{env.version}}_amd64.snap
           release: ${{env.channel}}

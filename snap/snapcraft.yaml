@@ -272,7 +272,7 @@ parts:
 
   wazuh-indexer:
     plugin: nil
-    after: [wrapper-scripts]
+    after: [wrapper-scripts, dependencies]
     build-packages:
       - ca-certificates
       - ca-certificates-java
@@ -319,3 +319,12 @@ parts:
       cp "${CRAFT_STAGE}/opt/opensearch/plugin-wrapper.sh" "${CRAFT_PRIME}/usr/share/wazuh-indexer/bin/opensearch-plugin"
       cp "${CRAFT_STAGE}/opt/opensearch/keystore-wrapper.sh" "${CRAFT_PRIME}/usr/share/wazuh-indexer/bin/opensearch-keystore"
       rm -rf usr/share/wazuh-indexer/jdk
+
+      # The build environment's umask can leave "etc/" (and dirs created under
+      # it, e.g. by "mkdir -p" above) non-world-readable/traversable. The JDK's
+      # security config (conf/security/java.security, etc.) is symlinked into
+      # etc/java-21-openjdk/security, so if "etc" isn't traversable by
+      # snap_daemon, the JVM fails at startup with
+      # "Error loading java.security file". Force safe permissions here,
+      # regardless of the umask used to create these directories.
+      chmod -R a+rX "${CRAFT_PRIME}/etc"

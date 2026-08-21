@@ -327,4 +327,7 @@ parts:
       # snap_daemon, the JVM fails at startup with
       # "Error loading java.security file". Force safe permissions here,
       # regardless of the umask used to create these directories.
-      chmod -R a+rX "${CRAFT_PRIME}/etc"
+      # The same issue affects "usr" (e.g. "usr/lib"), which snap requires
+      # to be world-readable/executable; otherwise "snap pack" refuses to
+      # build the snap ("should be world-readable and executable").
+      chmod -R a+rX "${CRAFT_PRIME}/etc" "${CRAFT_PRIME}/usr"

@@ -6,7 +6,7 @@ env:
 on:
   push:
     branches:
-      - '2/edge'
+      - main
   workflow_call:
 
 jobs:
@@ -31,13 +31,13 @@ jobs:
       - name: Download snap file
         uses: actions/download-artifact@v4
         with:
-          name: opensearch_snap_amd64
+          name: wazuh-indexer_snap_amd64
           path: .
 
       - name: Set snap release channel
         run: |
           version="$(cat snap/snapcraft.yaml | yq .version)"
-          channel="${version%%.*}/${{env.RELEASE}}"
+          channel="${version%.*}/${{env.RELEASE}}"
           
           echo "version=${version}" >> $GITHUB_ENV
           echo "channel=${channel}" >> $GITHUB_ENV
@@ -46,9 +46,9 @@ jobs:
         id: publish
         uses: snapcore/action-publish@v1
         env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPSTORE_TOKEN }}
         with:
-          snap: opensearch_${{env.version}}_amd64.snap
+          snap: wazuh-indexer_${{env.version}}_amd64.snap
           release: ${{env.channel}}
 
       - name: Upload snapcraft logs

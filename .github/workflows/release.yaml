@@ -6,7 +6,7 @@ env:
 on:
   push:
     branches:
-      - main
+      - 2/edge
   workflow_call:
 
 jobs:

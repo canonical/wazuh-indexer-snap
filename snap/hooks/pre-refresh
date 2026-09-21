@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -eux
+
+source "${OPS_ROOT}/helpers/snap-logger.sh" "hook-pre-refresh"
+
+restore_previous_home_if_present() {
+    # set last_revision as most recently modified dir in $SNAP/..
+    last_revision=$(
+        find "${SNAP_DATA}"/.. \
+            -mindepth 1 -maxdepth 1 \
+            -type d \
+            ! -name current \
+            ! -name common \
+            ! -name "$SNAP_REVISION" \
+            -printf '%T@ %P\n' |
+            sort -nr |
+            head -n1 |
+            awk '{print $2}'
+    )
+
+    local prev_opensearch_home="${SNAP_DATA}/../${last_revision}/usr/share/wazuh-indexer"
+    [ -d "${prev_opensearch_home}" ] || return 0
+
+    setpriv \
+        --clear-groups \
+        --reuid snap_daemon \
+        --regid snap_daemon -- \
+        "${SNAP}"/usr/bin/rsync -a --delete \
+        "${prev_opensearch_home}/" "${OPENSEARCH_HOME}/"
+}
+
+restore_previous_home_if_present

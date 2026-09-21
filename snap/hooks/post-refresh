@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -eux
+
+source "${OPS_ROOT}"/helpers/snap-logger.sh "hook-post-refresh"
+
+replace_stale_jars() {
+    declare -a common=(modules plugins lib)
+    for dir in "${common[@]}"; do
+        setpriv \
+            --clear-groups \
+            --reuid snap_daemon \
+            --regid snap_daemon -- \
+            "${SNAP}/usr/bin/rsync" -a --delete \
+            "${SNAP}/usr/share/wazuh-indexer/${dir}/" \
+            "${OPENSEARCH_HOME}/${dir}/"
+    done
+}
+
+replace_stale_jars

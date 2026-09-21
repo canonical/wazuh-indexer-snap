@@ -9,7 +9,9 @@ description: |
     analytics suite that makes it easy to ingest, search, visualize, and analyze data
     tailored for Wazuh.
 
-grade: stable
+license: 'Apache-2.0'
+
+grade: stable # must be 'stable' to release into candidate/stable channels
 
 confinement: strict # use 'strict' once you have the right plugs and slots
 
@@ -192,6 +194,11 @@ apps:
     plugs:
       - network
       - network-bind
+      - process-control
+      - system-observe
+      - sys-fs-cgroup-service
+      - mount-observe
+      - hardware-observe
     environment:
       bin_script: opensearch-node
 
@@ -257,6 +264,7 @@ parts:
       - zlib1g
       - libqatzip3
       - acl
+      - rsync
 
 
 

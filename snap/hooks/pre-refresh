@@ -18,7 +18,7 @@ restore_previous_home_if_present() {
             awk '{print $2}'
     )
 
-    local prev_opensearch_home="${SNAP_DATA}/../${last_revision}/usr/share/opensearch"
+    local prev_opensearch_home="${SNAP_DATA}/../${last_revision}/usr/share/wazuh-indexer"
     [ -d "${prev_opensearch_home}" ] || return 0
 
     setpriv \

@@ -60,14 +60,14 @@ function create_editable_cacerts_trust_store() {
     "${SNAP}"/usr/lib/jvm/java-21-openjdk-amd64/bin/keytool \
         -importkeystore                                     \
         -srckeystore  "${SNAP}/etc/ssl/certs/java/cacerts"  \
-        -destkeystore "${SNAP_DATA}"/etc/opensearch/certificates/cacerts.p12 \
+        -destkeystore "${OPENSEARCH_PATH_CERTS}/cacerts.p12" \
         -srcstoretype   JKS              \
         -deststoretype  PKCS12           \
         -srcstorepass   changeit         \
         -deststorepass  changeit         \
         -noprompt
 
-    echo "-Djavax.net.ssl.trustStore=/var/snap/opensearch/current/etc/opensearch/certificates/cacerts.p12" | tee -a "${OPENSEARCH_PATH_CONF}/jvm.options"
+    echo "-Djavax.net.ssl.trustStore=${OPENSEARCH_PATH_CERTS}/cacerts.p12" | tee -a "${OPENSEARCH_PATH_CONF}/jvm.options"
     echo "-Djavax.net.ssl.trustStorePassword=changeit" | tee -a "${OPENSEARCH_PATH_CONF}/jvm.options"
 }
 

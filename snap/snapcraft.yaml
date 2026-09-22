@@ -1,7 +1,7 @@
 name: wazuh-indexer
 base: core24
 
-version: '4.11.0'
+version: '4.14.7'
 
 summary: OpenSearch with additional changes for easier use alongside Wazuh.
 description: |
@@ -298,18 +298,18 @@ parts:
       cp /etc/ssl/certs/java/cacerts "${trust_store}"
     stage-packages:
       - openjdk-21-jdk-headless
-      - wazuh-indexer=4.11.0-1
+      - wazuh-indexer=4.14.7-1
     override-stage: |
       craftctl default
       chmod -R 755 usr/share/wazuh-indexer
       OPENSEARCH_PATH_CONF=${CRAFT_STAGE}/etc/wazuh-indexer ${CRAFT_STAGE}/usr/share/wazuh-indexer/bin/opensearch-plugin install --batch \
-        https://github.com/Aiven-Open/prometheus-exporter-plugin-for-opensearch/releases/download/2.16.0.0/prometheus-exporter-2.16.0.0.zip
+        https://github.com/opensearch-project/opensearch-prometheus-exporter/releases/download/2.19.5.0/prometheus-exporter-2.19.5.0.zip
       OPENSEARCH_PATH_CONF=${CRAFT_STAGE}/etc/wazuh-indexer ${CRAFT_STAGE}/usr/share/wazuh-indexer/bin/opensearch-plugin install --batch \
-        https://artifacts.opensearch.org/releases/plugins/repository-gcs/2.16.0/repository-gcs-2.16.0.zip
+        https://artifacts.opensearch.org/releases/plugins/repository-gcs/2.19.5/repository-gcs-2.19.5.zip
       OPENSEARCH_PATH_CONF=${CRAFT_STAGE}/etc/wazuh-indexer ${CRAFT_STAGE}/usr/share/wazuh-indexer/bin/opensearch-plugin install --batch \
-        https://artifacts.opensearch.org/releases/plugins/repository-s3/2.16.0/repository-s3-2.16.0.zip
+        https://artifacts.opensearch.org/releases/plugins/repository-s3/2.19.5/repository-s3-2.19.5.zip
       OPENSEARCH_PATH_CONF=${CRAFT_STAGE}/etc/wazuh-indexer ${CRAFT_STAGE}/usr/share/wazuh-indexer/bin/opensearch-plugin install --batch \
-        https://artifacts.opensearch.org/releases/plugins/repository-azure/2.16.0/repository-azure-2.16.0.zip
+        https://artifacts.opensearch.org/releases/plugins/repository-azure/2.19.5/repository-azure-2.19.5.zip
       cp -r ${CRAFT_STAGE}/usr/share/wazuh-indexer/plugins/prometheus-exporter ${CRAFT_PART_INSTALL}/usr/share/wazuh-indexer/plugins/prometheus-exporter
       cp -r ${CRAFT_STAGE}/usr/share/wazuh-indexer/plugins/repository-gcs ${CRAFT_PART_INSTALL}/usr/share/wazuh-indexer/plugins/repository-gcs
       cp -r ${CRAFT_STAGE}/usr/share/wazuh-indexer/plugins/repository-s3 ${CRAFT_PART_INSTALL}/usr/share/wazuh-indexer/plugins/repository-s3

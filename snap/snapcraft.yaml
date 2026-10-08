@@ -310,10 +310,18 @@ parts:
         https://artifacts.opensearch.org/releases/plugins/repository-s3/2.19.5/repository-s3-2.19.5.zip
       OPENSEARCH_PATH_CONF=${CRAFT_STAGE}/etc/wazuh-indexer ${CRAFT_STAGE}/usr/share/wazuh-indexer/bin/opensearch-plugin install --batch \
         https://artifacts.opensearch.org/releases/plugins/repository-azure/2.19.5/repository-azure-2.19.5.zip
+      # wazuh-indexer 4.14.7 dropped security-analytics from its packaging, so install it from Maven Central until Wazuh restores it upstream.
+      OPENSEARCH_PATH_CONF=${CRAFT_STAGE}/etc/wazuh-indexer ${CRAFT_STAGE}/usr/share/wazuh-indexer/bin/opensearch-plugin install --batch \
+        https://repo1.maven.org/maven2/org/opensearch/plugin/opensearch-security-analytics/2.19.5.0/opensearch-security-analytics-2.19.5.0.zip
       cp -r ${CRAFT_STAGE}/usr/share/wazuh-indexer/plugins/prometheus-exporter ${CRAFT_PART_INSTALL}/usr/share/wazuh-indexer/plugins/prometheus-exporter
       cp -r ${CRAFT_STAGE}/usr/share/wazuh-indexer/plugins/repository-gcs ${CRAFT_PART_INSTALL}/usr/share/wazuh-indexer/plugins/repository-gcs
       cp -r ${CRAFT_STAGE}/usr/share/wazuh-indexer/plugins/repository-s3 ${CRAFT_PART_INSTALL}/usr/share/wazuh-indexer/plugins/repository-s3
       cp -r ${CRAFT_STAGE}/usr/share/wazuh-indexer/plugins/repository-azure ${CRAFT_PART_INSTALL}/usr/share/wazuh-indexer/plugins/repository-azure
+      cp -r ${CRAFT_STAGE}/usr/share/wazuh-indexer/plugins/opensearch-security-analytics ${CRAFT_PART_INSTALL}/usr/share/wazuh-indexer/plugins/opensearch-security-analytics
+      # Maven Central only ships the plugin jar, not its pre-packaged Sigma rules; fetch them from the matching GitHub release tag, or detector creation hangs indefinitely.
+      mkdir -p ${CRAFT_PART_INSTALL}/etc/wazuh-indexer/opensearch-security-analytics
+      curl -sL https://github.com/opensearch-project/security-analytics/archive/refs/tags/2.19.5.0.tar.gz | \
+        tar -xz -C ${CRAFT_PART_INSTALL}/etc/wazuh-indexer/opensearch-security-analytics --strip-components=4 security-analytics-2.19.5.0/src/main/config/rules
       sed -i -e 's/^\([^#].*\)/# \1/g' ${CRAFT_STAGE}/etc/wazuh-indexer/opensearch.yml
       echo '' >> "${CRAFT_STAGE}/etc/wazuh-indexer/opensearch.yml"
       echo 'compatibility.override_main_response_version: true' >> "${CRAFT_STAGE}/etc/wazuh-indexer/opensearch.yml"

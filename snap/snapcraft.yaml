@@ -9,6 +9,8 @@ description: |
     analytics suite that makes it easy to ingest, search, visualize, and analyze data
     tailored for Wazuh.
 
+    Wazuh 4.11 is no longer supported; Wazuh 4.14 is the supported version.
+
 license: 'Apache-2.0'
 
 grade: stable # must be 'stable' to release into candidate/stable channels

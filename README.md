@@ -12,6 +12,10 @@
 > [!IMPORTANT]
 > Wazuh 4.11 is no longer supported; Wazuh 4.14 is the supported version.
 
+> [!NOTE]
+> The Wazuh indexer, dashboard and server must run the same Wazuh version, patch included.
+> Upgrade them together: indexer first, then dashboard, then server.
+
 This is the snap for [Wazuh Indexer](https://documentation.wazuh.com/current/getting-started/components/wazuh-indexer.html), a community-driven, Apache 2.0-licensed open source search and
 analytics suite that makes it easy to ingest, search, visualize, and analyze data.
 

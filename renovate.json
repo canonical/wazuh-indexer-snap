@@ -1,12 +1,18 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "enabledManagers": ["custom.regex"],
+  "extends": [
+    "config:recommended"
+  ],
+  "enabledManagers": [
+    "custom.regex"
+  ],
   "customManagers": [
     {
       "customType": "regex",
       "description": "Wazuh indexer version and apt package pin in snapcraft.yaml",
-      "managerFilePatterns": ["/(^|/)snapcraft\\.yaml$/"],
+      "managerFilePatterns": [
+        "/(^|/)snapcraft\\.yaml$/"
+      ],
       "matchStrings": [
         "# renovate: depName=(?<depName>\\S+)\\n[^\\n]*?(?<currentValue>\\d+\\.\\d+\\.\\d+)"
       ],
@@ -18,16 +24,21 @@
   "packageRules": [
     {
       "description": "Only follow the supported Wazuh 4.14 patch releases, and keep version and apt pins in one PR.",
-      "matchPackageNames": ["wazuh/wazuh-indexer"],
+      "matchPackageNames": [
+        "wazuh/wazuh-indexer"
+      ],
       "allowedVersions": "/^4\\.14\\./",
       "groupName": "wazuh-indexer",
       "automerge": false,
       "prBodyNotes": [
-        "Check the OpenSearch version bundled in this wazuh-indexer release (see gradle/libs.versions.toml upstream) and update the prometheus-exporter, repository-* and security-analytics plugin URLs in snap/snapcraft.yaml to match."
+        "Check the OpenSearch version bundled in this wazuh-indexer release (see gradle/libs.versions.toml upstream) and update the prometheus-exporter, repository-* and security-analytics plugin URLs in snap/snapcraft.yaml to match.",
+        "Wazuh indexer, dashboard and server must be kept on the same Wazuh version (including the patch). Make sure the other components are bumped too and upgrade them together: indexer first, then dashboard, then server."
       ]
     }
   ],
-  "schedule": ["* * * * 0,6"],
+  "schedule": [
+    "* * * * 0,6"
+  ],
   "vulnerabilityAlerts": {
     "enabled": true
   }

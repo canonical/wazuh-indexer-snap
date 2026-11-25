@@ -2,7 +2,7 @@ name: wazuh-indexer
 base: core24
 
 # renovate: depName=wazuh/wazuh-indexer
-version: '4.14.10'
+version: '4.14.11'
 
 summary: OpenSearch with additional changes for easier use alongside Wazuh.
 description: |
@@ -302,7 +302,7 @@ parts:
     stage-packages:
       - openjdk-21-jdk-headless
       # renovate: depName=wazuh/wazuh-indexer
-      - wazuh-indexer=4.14.10-1
+      - wazuh-indexer=4.14.11-1
     override-stage: |
       craftctl default
       chmod -R 755 usr/share/wazuh-indexer

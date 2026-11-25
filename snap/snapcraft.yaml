@@ -306,17 +306,20 @@ parts:
     override-stage: |
       craftctl default
       chmod -R 755 usr/share/wazuh-indexer
+      # Plugins must match the OpenSearch version bundled in the wazuh-indexer package exactly, so derive it from the staged core jar instead of hardcoding it.
+      OS_VERSION=$(basename ${CRAFT_STAGE}/usr/share/wazuh-indexer/lib/opensearch-[0-9]*.jar .jar | sed 's/^opensearch-//')
+      [ -n "${OS_VERSION}" ] || { echo "Unable to detect bundled OpenSearch version" >&2; exit 1; }
       OPENSEARCH_PATH_CONF=${CRAFT_STAGE}/etc/wazuh-indexer ${CRAFT_STAGE}/usr/share/wazuh-indexer/bin/opensearch-plugin install --batch \
-        https://github.com/opensearch-project/opensearch-prometheus-exporter/releases/download/2.19.6.0/prometheus-exporter-2.19.6.0.zip
+        https://github.com/opensearch-project/opensearch-prometheus-exporter/releases/download/${OS_VERSION}.0/prometheus-exporter-${OS_VERSION}.0.zip
       OPENSEARCH_PATH_CONF=${CRAFT_STAGE}/etc/wazuh-indexer ${CRAFT_STAGE}/usr/share/wazuh-indexer/bin/opensearch-plugin install --batch \
-        https://artifacts.opensearch.org/releases/plugins/repository-gcs/2.19.6/repository-gcs-2.19.6.zip
+        https://artifacts.opensearch.org/releases/plugins/repository-gcs/${OS_VERSION}/repository-gcs-${OS_VERSION}.zip
       OPENSEARCH_PATH_CONF=${CRAFT_STAGE}/etc/wazuh-indexer ${CRAFT_STAGE}/usr/share/wazuh-indexer/bin/opensearch-plugin install --batch \
-        https://artifacts.opensearch.org/releases/plugins/repository-s3/2.19.6/repository-s3-2.19.6.zip
+        https://artifacts.opensearch.org/releases/plugins/repository-s3/${OS_VERSION}/repository-s3-${OS_VERSION}.zip
       OPENSEARCH_PATH_CONF=${CRAFT_STAGE}/etc/wazuh-indexer ${CRAFT_STAGE}/usr/share/wazuh-indexer/bin/opensearch-plugin install --batch \
-        https://artifacts.opensearch.org/releases/plugins/repository-azure/2.19.6/repository-azure-2.19.6.zip
+        https://artifacts.opensearch.org/releases/plugins/repository-azure/${OS_VERSION}/repository-azure-${OS_VERSION}.zip
       # wazuh-indexer 4.14.x does not ship security-analytics in its packaging, so install it from Maven Central until Wazuh restores it upstream.
       OPENSEARCH_PATH_CONF=${CRAFT_STAGE}/etc/wazuh-indexer ${CRAFT_STAGE}/usr/share/wazuh-indexer/bin/opensearch-plugin install --batch \
-        https://repo1.maven.org/maven2/org/opensearch/plugin/opensearch-security-analytics/2.19.6.0/opensearch-security-analytics-2.19.6.0.zip
+        https://repo1.maven.org/maven2/org/opensearch/plugin/opensearch-security-analytics/${OS_VERSION}.0/opensearch-security-analytics-${OS_VERSION}.0.zip
       cp -r ${CRAFT_STAGE}/usr/share/wazuh-indexer/plugins/prometheus-exporter ${CRAFT_PART_INSTALL}/usr/share/wazuh-indexer/plugins/prometheus-exporter
       cp -r ${CRAFT_STAGE}/usr/share/wazuh-indexer/plugins/repository-gcs ${CRAFT_PART_INSTALL}/usr/share/wazuh-indexer/plugins/repository-gcs
       cp -r ${CRAFT_STAGE}/usr/share/wazuh-indexer/plugins/repository-s3 ${CRAFT_PART_INSTALL}/usr/share/wazuh-indexer/plugins/repository-s3
@@ -324,8 +327,8 @@ parts:
       cp -r ${CRAFT_STAGE}/usr/share/wazuh-indexer/plugins/opensearch-security-analytics ${CRAFT_PART_INSTALL}/usr/share/wazuh-indexer/plugins/opensearch-security-analytics
       # Maven Central only ships the plugin jar, not its pre-packaged Sigma rules; fetch them from the matching GitHub release tag, or detector creation hangs indefinitely.
       mkdir -p ${CRAFT_PART_INSTALL}/etc/wazuh-indexer/opensearch-security-analytics
-      curl -sL https://github.com/opensearch-project/security-analytics/archive/refs/tags/2.19.6.0.tar.gz | \
-        tar -xz -C ${CRAFT_PART_INSTALL}/etc/wazuh-indexer/opensearch-security-analytics --strip-components=4 security-analytics-2.19.6.0/src/main/config/rules
+      curl -sL https://github.com/opensearch-project/security-analytics/archive/refs/tags/${OS_VERSION}.0.tar.gz | \
+        tar -xz -C ${CRAFT_PART_INSTALL}/etc/wazuh-indexer/opensearch-security-analytics --strip-components=4 security-analytics-${OS_VERSION}.0/src/main/config/rules
       sed -i -e 's/^\([^#].*\)/# \1/g' ${CRAFT_STAGE}/etc/wazuh-indexer/opensearch.yml
       echo '' >> "${CRAFT_STAGE}/etc/wazuh-indexer/opensearch.yml"
       echo 'compatibility.override_main_response_version: true' >> "${CRAFT_STAGE}/etc/wazuh-indexer/opensearch.yml"

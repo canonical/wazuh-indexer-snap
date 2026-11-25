@@ -32,7 +32,7 @@
       "groupName": "wazuh-indexer",
       "automerge": false,
       "prBodyNotes": [
-        "Check the OpenSearch version bundled in this wazuh-indexer release (see gradle/libs.versions.toml upstream) and update the prometheus-exporter, repository-* and security-analytics plugin URLs in snap/snapcraft.yaml to match.",
+        "The OpenSearch plugin versions (prometheus-exporter, repository-*, security-analytics) are derived at build time from the OpenSearch version bundled in the package. If CI fails because a plugin release for that OpenSearch version does not exist yet, wait for upstream to publish it.",
         "Wazuh indexer, dashboard and server must be kept on the same Wazuh version (including the patch). Make sure the other components are bumped too and upgrade them together: indexer first, then dashboard, then server."
       ]
     }
